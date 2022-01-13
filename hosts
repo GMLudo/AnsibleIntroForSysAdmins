@@ -1,0 +1,5 @@
+[db]
+host0 ansible_host=192.168.122.15 ansible_user=root
+
+[webserver]
+host1 ansible_host=192.168.122.45 ansible_user=root

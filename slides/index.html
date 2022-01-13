@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2>Ansible smooth learning path for experts in sysadmin</h2>
+				</section>
+				<section>
+					<h2>The speaker: Ludovic Gasc</h2>
+					<ol>
+						<li>OpenSource contributor more than 20 years</li>
+						<li>15 years in several start-ups and successful scale-ups</li>
+						<li>FOSDEM JavaScript devroom manager<br/>FOSDEM = biggest OpenSource community in Europe
+							<br/>+8 500 attendees and +700 lectures</li>
+						<li>Define OpenSource architectures and governance for clients at IBM</li>
+						<li>As hobby, popularization of science in an association (critical thinking approach)</li>
+					</ol>
+				</section>
+				<section>
+					<h2>day-to-day sysadmin tasks</h2>
+					<ol>
+						<li>Remote connections with SSH</li>
+						<li>Manual software installation</li>
+						<li>Edit configuration files</li>
+						<li>Documentation written in a wiki</li>
+						<li>Bash/Python scripting for automation</li>
+					</ol>
+				</section>
+				<section>
+					<h2>Challenges</h2>
+					<ol>
+						<li>How to avoid small differences between servers ?</li>
+						<li>How to reinstall a server at the same state ?</li>
+						<li>Who has modified what ?</li>
+						<li>How to have an history of modifications ?</li>
+					</ol>
+				</section>
+				<section>
+					<h2>Why use Ansible instead of Bash or Python scripts ?</h2>
+					<ol>
+						<li style="color: red;">Con: You need to learn a new syntax, based on YAML</li>
+						<li style="color: green;">Pro: Simplified syntax for sysadmin automation</li>
+						<li style="color: green;">Pro: Dedicated modules ready to use</li>
+						<li style="color: green;">Pro: You can embed Ansible in your Python code</li>
+					</ol>
+				</section>
+				<section>
+					<h2>Ansible: introduction</h2>
+					<ol>
+						<li>Easy install with RPM packages or pip on your laptop: <b>yum install ansible</b></li>
+						<li>Ansible uses SSH connections to launch commands</li>
+						<li>Two main commands:<br /> <b>ansible</b> and <b>ansible-playbook</b></li>
+						<li>Ansible can be used with only one file: <b>hosts</b></li>
+					</ol>
+				</section>
+				<section>
+					<h2>hosts file example</h2>
+					<pre><code data-trim data-noescape>
+						[db]
+						host0 ansible_host=192.168.122.15 ansible_user=root
+						host1 ansible_host=192.168.122.45 ansible_user=root
+					</code></pre>
+				</section>
+				<section>
+					<h2>ansible command example #1</h2>
+					<pre><code data-trim data-noescape>
+						$ ansible -i hosts -m shell -a 'ps aux' db
+					</code></pre>
+				</section>
+				<section>
+					<h2>ansible command example #2</h2>
+					<pre><code data-trim data-noescape>
+						$ ansible -i hosts -m copy -a 'src=/etc/hosts dest=/tmp/hosts2' db
+					</code></pre>
+					<p><a href="https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html" target="_blank">List of all Ansible modules</a></p>
+				</section>
+				<section>
+					<h2>Key notion: Idempotent</h2>
+					<p>
+						If I launch a module 10 times,<br /> only the first time it will modify the server
+					</p>
+				</section>
+				<section>
+					<h2>Relaunch example #2</h2>
+					<pre><code data-trim data-noescape>
+						$ ansible -i hosts -m copy -a 'src=/etc/hosts dest=/tmp/hosts2' db
+					</code></pre>
+				</section>
+				<section>
+					<h2>Simple ansible playbook example</h2>
+					<pre><code data-trim data-noescape>
+						$ ansible -i hosts -m copy -a 'src=/etc/hosts dest=/tmp/hosts2' db
+					</code></pre>
+					<pre><code data-trim data-noescape>
+						- hosts: db
+						tasks:
+						  - name: copy hosts file
+							copy:
+							  src: /etc/hosts
+							  dest: /tmp/hosts2
+					</code></pre>
+				</section>
+				<section>
+					<h2>Launch ansible playbook</h2>
+					<pre><code data-trim data-noescape>
+						$ ansible-playbook -i hosts -l db management.yml
+					</code></pre>
+				</section>
+				<section>
+					<h2>Good practices</h2>
+					<ol>
+						<li>Use Git (GitHub, Gitlab) to have an history</li>
+						<li>Avoid manual modifications on servers</li>
+						<li>Centralize the execution with AWX (Ansible Tower)</li>
+					</ol>
+				</section>
+				<section>
+					<h2>Challenges: Ansible answers</h2>
+					<ol>
+						<li>How to avoid small differences between servers ?<br><b>Ansible Playbooks</b></li>
+						<li>How to reinstall a server at the same state ?<br><b>Ansible Playbooks</b></li>
+						<li>Who has modified what ?<br><b>Git+AWX</b></li>
+						<li>How to have an history of modifications ?<br><b>Git+AWX</b></li>
+					</ol>
+				</section>
+				<section>
+					<h2>Interesting Ansible tutorials</h2>
+					<ol>
+						<li><a href="https://github.com/leucos/ansible-tuto">https://github.com/leucos/ansible-tuto</a></li>
+						<li><a href="https://katacoda.com/courses/ansible">https://katacoda.com/courses/ansible</a></li>
+						<li><a href="https://github.com/blacksaildivision/ansible-tutorial">https://github.com/blacksaildivision/ansible-tutorial</a></li>
+						<li><a href="https://github.com/schoolofdevops/ansible-tutorial">https://github.com/schoolofdevops/ansible-tutorial</a></li>
+						<li><a href="https://github.com/turkenh/ansible-interactive-tutorial">https://github.com/turkenh/ansible-interactive-tutorial</a></li>
+					</ol>
+				</section>
+				<section>
+					<h2>Questions ?</h2>
+				</section>
+		</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				width: 1024,
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
